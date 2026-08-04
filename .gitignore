@@ -1,0 +1,5 @@
+backend-agent/.env
+backend-agent/.venv/
+.venv/
+__pycache__/
+*.log

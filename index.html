@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alexis Clarisse Lindsay - Job Agent</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+:root {
+    --bg-dark: hsl(222, 47%, 7%);
+    --bg-surface: hsl(222, 40%, 11%);
+    --bg-card: rgba(22, 31, 48, 0.75);
+    --bg-card-hover: rgba(30, 42, 66, 0.85);
+    --border-color: rgba(255, 255, 255, 0.08);
+    --border-accent: rgba(99, 102, 241, 0.3);
+    --primary: hsl(239, 84%, 67%);
+    --primary-hover: hsl(239, 84%, 73%);
+    --accent: hsl(172, 66%, 50%);
+    --accent-gold: hsl(38, 92%, 56%);
+    --danger: hsl(346, 84%, 61%);
+    --text-main: hsl(210, 40%, 98%);
+    --text-muted: hsl(215, 20%, 65%);
+    --text-dim: hsl(215, 15%, 45%);
+    --font-heading: 'Outfit', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --shadow-glass: 0 8px 32px 0 rgba(0,0,0,0.37);
+    --shadow-glow: 0 0 20px rgba(99,102,241,0.25);
+    --transition-fast: 0.2s cubic-bezier(0.16,1,0.3,1);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:var(--font-body); background:var(--bg-dark); color:var(--text-main); min-height:100vh;
+  background-image: radial-gradient(circle at 15% 15%, rgba(99,102,241,0.15) 0%, transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(20,184,166,0.12) 0%, transparent 45%);
+  background-attachment:fixed; line-height:1.5; overflow-x:hidden; }
+.glass-card { background:var(--bg-card); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  border:1px solid var(--border-color); border-radius:var(--radius-md); box-shadow:var(--shadow-glass); }
+.app-container { display:flex; flex-direction:column; min-height:100vh; max-width:1600px; margin:0 auto; padding:20px; gap:16px; }
+.navbar { display:flex; justify-content:space-between; align-items:center; padding:16px 28px; flex-wrap:wrap; gap:12px; }
+.brand-section { display:flex; align-items:center; gap:16px; }
+.logo-badge { width:46px; height:46px; border-radius:14px; background:linear-gradient(135deg,var(--primary),var(--accent));
+  display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-glow); }
+.logo-icon { font-size:22px; color:#fff; }
+.brand-title { font-family:var(--font-heading); font-size:22px; font-weight:700; }
+.accent-pill { font-size:11px; padding:3px 8px; border-radius:20px; background:rgba(99,102,241,0.25);
+  color:var(--primary-hover); border:1px solid var(--border-accent); }
+.brand-subtitle { font-size:13px; color:var(--text-muted); }
+.nav-controls { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+.mode-badge { display:flex; align-items:center; gap:8px; padding:8px 16px; border-radius:30px;
+  font-size:13px; font-weight:600; cursor:pointer; transition:var(--transition-fast); }
+.mode-badge.admin-mode { background:rgba(20,184,166,0.15); color:var(--accent); border:1px solid rgba(20,184,166,0.3); }
+.mode-badge.public-mode { background:rgba(245,158,11,0.15); color:var(--accent-gold); border:1px solid rgba(245,158,11,0.3); }
+.workspace-grid { display:grid; grid-template-columns:280px 1fr; gap:20px; flex:1; }
+.sidebar { padding:20px; display:flex; flex-direction:column; justify-content:space-between; height:fit-content; position:sticky; top:20px; }
+.sidebar-menu { display:flex; flex-direction:column; gap:8px; }
+.menu-item { display:flex; align-items:center; gap:14px; padding:14px 18px; border-radius:var(--radius-sm);
+  background:transparent; border:none; color:var(--text-muted); font-family:var(--font-body);
+  font-size:14px; font-weight:500; cursor:pointer; transition:var(--transition-fast); text-align:left; width:100%; }
+.menu-item:hover { background:rgba(255,255,255,0.05); color:var(--text-main); }
+.menu-item.active { background:linear-gradient(90deg,rgba(99,102,241,0.2),rgba(99,102,241,0.05));
+  border-left:3px solid var(--primary); color:var(--text-main); font-weight:600; }
+.menu-icon { font-size:16px; width:20px; text-align:center; }
+.badge-count { margin-left:auto; background:rgba(255,255,255,0.1); color:var(--text-muted);
+  font-size:11px; padding:2px 8px; border-radius:10px; }
+.badge-count.count-accent { background:rgba(20,184,166,0.2); color:var(--accent); }
+.sidebar-footer { margin-top:24px; padding-top:16px; border-top:1px solid var(--border-color); }
+.card-header-sm { color:var(--text-muted); font-weight:600; margin-bottom:10px; display:flex; align-items:center; gap:6px; font-size:12px; }
+.market-list { list-style:none; display:flex; flex-direction:column; gap:8px; color:var(--text-muted); font-size:12px; }
+.tab-pane { display:none; animation:fadeIn var(--transition-fast); }
+.tab-pane.active { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+.pane-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+.pane-title { font-family:var(--font-heading); font-size:24px; font-weight:700; }
+.pane-subtitle { font-size:14px; color:var(--text-muted); margin-top:4px; }
+.btn { display:inline-flex; align-items:center; gap:8px; padding:10px 20px; border-radius:var(--radius-sm);
+  font-family:var(--font-body); font-size:14px; font-weight:600; cursor:pointer;
+  transition:var(--transition-fast); border:none; outline:none; }
+.btn-primary { background:var(--primary); color:#fff; box-shadow:0 4px 14px rgba(99,102,241,0.35); }
+.btn-primary:hover { background:var(--primary-hover); transform:translateY(-1px); }
+.btn-secondary { background:rgba(255,255,255,0.08); color:var(--text-main); border:1px solid var(--border-color); }
+.btn-secondary:hover { background:rgba(255,255,255,0.12); }
+.btn-accent { background:linear-gradient(135deg,var(--accent),hsl(172,66%,42%)); color:#000;
+  font-weight:700; box-shadow:0 4px 14px rgba(20,184,166,0.3); }
+.btn-accent:hover { filter:brightness(1.1); transform:translateY(-1px); }
+.btn-sm { padding:7px 14px; font-size:12px; }
+.btn-block { width:100%; justify-content:center; }
+.filter-toolbar { padding:16px 20px; margin-bottom:20px; display:flex; flex-direction:column; gap:16px; }
+.board-tabs { display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; }
+.board-tab { padding:8px 16px; border-radius:20px; background:rgba(255,255,255,0.05);
+  border:1px solid var(--border-color); color:var(--text-muted); font-family:var(--font-body);
+  font-size:13px; font-weight:500; cursor:pointer; transition:var(--transition-fast); white-space:nowrap; }
+.board-tab.active,.board-tab:hover { background:rgba(99,102,241,0.2); border-color:var(--primary); color:var(--text-main); }
+.search-inputs { display:flex; gap:12px; }
+.search-field { flex:1; position:relative; display:flex; align-items:center; }
+.search-icon { position:absolute; left:14px; color:var(--text-dim); }
+.search-field input { width:100%; padding:10px 14px 10px 40px; border-radius:var(--radius-sm);
+  background:rgba(0,0,0,0.25); border:1px solid var(--border-color); color:var(--text-main);
+  font-family:var(--font-body); font-size:14px; }
+.search-field input:focus,select:focus,textarea:focus { outline:none; border-color:var(--primary); }
+select { padding:10px 16px; border-radius:var(--radius-sm); background:var(--bg-surface);
+  border:1px solid var(--border-color); color:var(--text-main); font-family:var(--font-body); font-size:13px; }
+textarea { width:100%; padding:10px; border-radius:var(--radius-sm); background:rgba(0,0,0,0.25);
+  border:1px solid var(--border-color); color:var(--text-main); font-family:var(--font-body); font-size:13px; resize:vertical; }
+input[type="text"],input[type="email"],input[type="password"] { width:100%; padding:10px; border-radius:var(--radius-sm);
+  background:rgba(0,0,0,0.25); border:1px solid var(--border-color); color:var(--text-main);
+  font-family:var(--font-body); font-size:13px; }
+label { font-size:12px; font-weight:600; color:var(--text-muted); margin-bottom:4px; display:block; }
+.form-group { display:flex; flex-direction:column; gap:4px; margin-bottom:12px; }
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.editor-section,.settings-card { padding:20px; margin-bottom:16px; }
+.section-heading { font-size:14px; font-weight:700; color:var(--text-main); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+.resume-bank-tabs-container { display:flex; gap:12px; padding:14px; margin-bottom:20px; overflow-x:auto; }
+.resume-bank-tab { display:flex; align-items:center; gap:12px; padding:12px 18px; border-radius:var(--radius-sm);
+  background:rgba(0,0,0,0.25); border:1px solid var(--border-color); color:var(--text-muted);
+  font-family:var(--font-body); cursor:pointer; transition:var(--transition-fast); text-align:left; min-width:220px; }
+.resume-bank-tab:hover { background:rgba(255,255,255,0.05); border-color:var(--border-accent); }
+.resume-bank-tab.active { background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(20,184,166,0.1));
+  border:1px solid var(--accent); color:var(--text-main); box-shadow:0 4px 14px rgba(20,184,166,0.15); }
+.bank-tab-flag { font-size:24px; }
+.bank-tab-title { font-weight:700; font-size:13px; }
+.bank-tab-market { font-size:11px; color:var(--text-muted); }
+.job-cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(360px,1fr)); gap:18px; }
+.job-card { padding:22px; display:flex; flex-direction:column; justify-content:space-between; gap:16px;
+  transition:0.35s cubic-bezier(0.16,1,0.3,1); position:relative; overflow:hidden; }
+.job-card:hover { background:var(--bg-card-hover); transform:translateY(-3px); border-color:var(--border-accent); }
+.job-card-header { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+.job-board-badge { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:600; }
+.badge-eslcafe { background:rgba(239,68,68,0.15); color:#f87171; border:1px solid rgba(239,68,68,0.3); }
+.badge-indeed-it { background:rgba(59,130,246,0.15); color:#60a5fa; border:1px solid rgba(59,130,246,0.3); }
+.badge-linkedin { background:rgba(14,165,233,0.15); color:#38bdf8; border:1px solid rgba(14,165,233,0.3); }
+.badge-glassdoor { background:rgba(34,197,94,0.15); color:#4ade80; border:1px solid rgba(34,197,94,0.3); }
+.match-score-badge { display:flex; align-items:center; gap:6px; background:rgba(20,184,166,0.15);
+  border:1px solid rgba(20,184,166,0.3); color:var(--accent); padding:4px 10px; border-radius:20px; font-weight:700; font-size:12px; }
+.job-title { font-family:var(--font-heading); font-size:18px; font-weight:600; margin-top:8px; }
+.job-company { font-size:13px; color:var(--text-muted); display:flex; align-items:center; gap:8px; margin-top:4px; }
+.job-tags { display:flex; flex-wrap:wrap; gap:6px; }
+.job-tag { font-size:11px; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.05); color:var(--text-muted); }
+.job-snippet { font-size:13px; color:var(--text-muted); line-height:1.4; display:-webkit-box;
+  -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.job-card-actions { display:flex; gap:10px; padding-top:12px; border-top:1px solid var(--border-color); }
+.studio-layout { display:grid; grid-template-columns:340px 1fr; gap:20px; }
+.studio-selector,.studio-output { padding:24px; display:flex; flex-direction:column; gap:18px; }
+.job-preview-box { padding:16px; border-radius:var(--radius-sm); background:rgba(0,0,0,0.25);
+  border:1px solid var(--border-color); font-size:13px; color:var(--text-muted); }
+.output-tabs { display:flex; gap:10px; border-bottom:1px solid var(--border-color); padding-bottom:12px; }
+.output-tab { background:none; border:none; color:var(--text-muted); font-family:var(--font-body);
+  font-size:14px; font-weight:600; padding:6px 12px; cursor:pointer; border-bottom:2px solid transparent; transition:var(--transition-fast); }
+.output-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+.output-body { min-height:350px; background:rgba(0,0,0,0.2); border-radius:var(--radius-sm); padding:20px;
+  font-size:13px; line-height:1.6; overflow-y:auto; white-space:pre-line; font-family:monospace; }
+.output-actions { display:flex; gap:10px; flex-wrap:wrap; }
+.kanban-board { display:grid; grid-template-columns:repeat(5,1fr); gap:16px; overflow-x:auto; }
+.kanban-column { min-width:200px; }
+.column-header { display:flex; justify-content:space-between; align-items:center; padding:12px 16px;
+  background:rgba(0,0,0,0.2); border-radius:var(--radius-sm) var(--radius-sm) 0 0; border-bottom:2px solid var(--border-accent); }
+.col-title { font-size:13px; font-weight:600; display:flex; align-items:center; gap:6px; }
+.col-count { font-size:12px; background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:10px; }
+.kanban-cards { display:flex; flex-direction:column; gap:8px; padding:12px 0; }
+.kanban-card { background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-sm);
+  padding:14px; transition:var(--transition-fast); }
+.kanban-card:hover { border-color:var(--border-accent); }
+.kanban-card-title { font-weight:600; font-size:13px; margin-top:6px; }
+.kanban-card-meta { font-size:11px; color:var(--text-muted); margin-top:2px; }
+
+/* PDF Template */
+.pdf-cv-container { width:210mm; min-height:297mm; max-height:594mm; background:#fff; color:#111827;
+  padding:18mm 16mm; font-family:Arial,Helvetica,sans-serif; box-sizing:border-box; }
+.pdf-header { border-bottom:2px solid #1e3a8a; padding-bottom:10px; margin-bottom:14px; }
+.pdf-name { font-size:24px; font-weight:800; color:#1e3a8a; text-transform:uppercase; }
+.pdf-title-sub { font-size:13px; font-weight:700; color:#3b82f6; margin-top:2px; }
+.pdf-contact-bar { font-size:11px; color:#4b5563; margin-top:6px; }
+.pdf-section { margin-bottom:14px; }
+.pdf-sec-title { font-size:13px; font-weight:700; color:#1e3a8a; border-bottom:1px solid #e5e7eb;
+  padding-bottom:3px; margin-bottom:6px; text-transform:uppercase; }
+.pdf-text { font-size:11px; color:#374151; line-height:1.45; }
+.pdf-tags-aligned { font-size:10px; font-weight:700; color:#2563eb; margin-bottom:4px; }
+.pdf-exp-content,.pdf-edu-content { font-size:11px; color:#1f2937; line-height:1.45; }
+
+/* MODAL — THE KEY STYLES */
+.modal-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0;
+  background:rgba(0,0,0,0.75); backdrop-filter:blur(8px); z-index:1000;
+  align-items:center; justify-content:center; }
+.modal-overlay.active { display:flex !important; }
+.modal-card { width:440px; max-width:95vw; padding:28px; display:flex; flex-direction:column; gap:16px; }
+.modal-header { display:flex; justify-content:space-between; align-items:center; }
+.modal-close { background:none; border:none; color:var(--text-muted); font-size:20px; cursor:pointer; }
+.modal-footer { display:flex; gap:10px; flex-wrap:wrap; padding-top:12px; }
+.error-msg { color:var(--danger); font-size:12px; margin-top:4px; }
+.banner { display:flex; justify-content:space-between; align-items:center; padding:12px 20px;
+  border-radius:var(--radius-sm); font-size:13px; }
+.banner-info { background:rgba(99,102,241,0.12); border:1px solid rgba(99,102,241,0.25); }
+.banner-content { display:flex; align-items:center; gap:12px; }
+.banner-icon { color:var(--primary); font-size:16px; }
+.banner-close { background:none; border:none; color:var(--text-muted); font-size:18px; cursor:pointer; }
+@media(max-width:900px) { .workspace-grid{grid-template-columns:1fr;} .studio-layout{grid-template-columns:1fr;}
+  .kanban-board{grid-template-columns:repeat(2,1fr);} .form-grid{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+    <div id="app" class="app-container">
+        <header class="navbar glass-card">
+            <div class="brand-section">
+                <div class="logo-badge"><i class="fa-solid fa-robot logo-icon"></i></div>
+                <div>
+                    <h1 class="brand-title">JobAgent <span class="accent-pill">AI 2.6</span></h1>
+                    <p class="brand-subtitle">Smart Job Finder & 2-Page PDF CV Engine</p>
+                </div>
+            </div>
+            <div class="nav-controls">
+                <div id="mode-status-badge" class="mode-badge admin-mode" onclick="toggleAdminModal()">
+                    <i class="fa-solid fa-eye"></i>
+                    <span id="mode-text">Admin Mode</span>
+                    <span class="mode-hint" style="font-size:11px;opacity:0.8;">(Full Access)</span>
+                </div>
+                <button class="btn btn-secondary btn-sm" onclick="toggleAdminModal()">
+                    <i class="fa-solid fa-lock-open" id="admin-lock-icon"></i>
+                    <span id="admin-btn-label">Lock Admin</span>
+                </button>
+            </div>
+        </header>
+
+        <div id="public-notice-banner" class="banner banner-info" style="display:none;">
+            <div class="banner-content">
+                <i class="fa-solid fa-circle-info banner-icon"></i>
+                <span><strong>Public Portfolio Mode:</strong> Viewing demos for <strong>Alexis Clarisse Lindsay</strong>. PIN: 1234 for full access.</span>
+            </div>
+            <button class="banner-close" onclick="document.getElementById('public-notice-banner').style.display='none'">&times;</button>
+        </div>
+
+        <div class="workspace-grid">
+            <aside class="sidebar glass-card">
+                <nav class="sidebar-menu">
+                    <button class="menu-item active" data-tab="tab-job-feed" onclick="switchTab('tab-job-feed')">
+                        <i class="fa-solid fa-compass menu-icon"></i> Job Discovery <span class="badge-count" id="feed-count">4</span>
+                    </button>
+                    <button class="menu-item" data-tab="tab-resume" onclick="switchTab('tab-resume')">
+                        <i class="fa-solid fa-folder-tree menu-icon"></i> CV Bank (4 Slots)
+                    </button>
+                    <button class="menu-item" data-tab="tab-tailor" onclick="switchTab('tab-tailor')">
+                        <i class="fa-solid fa-file-pdf menu-icon"></i> AI CV Studio
+                    </button>
+                    <button class="menu-item" data-tab="tab-tracker" onclick="switchTab('tab-tracker')">
+                        <i class="fa-solid fa-table-columns menu-icon"></i> Pipeline <span class="badge-count count-accent" id="tracker-count">0</span>
+                    </button>
+                </nav>
+                <div class="sidebar-footer">
+                    <div class="card-header-sm"><i class="fa-solid fa-globe"></i> Target Markets</div>
+                    <ul class="market-list">
+                        <li>🇮🇹 Italy & Europe — Indeed IT</li>
+                        <li>🌐 Global Remote — LinkedIn</li>
+                        <li>🇨🇳 China (ELA/Math) — ESL Cafe</li>
+                        <li>🇺🇸 USA Remote (CSM) — Glassdoor</li>
+                    </ul>
+                </div>
+            </aside>
+
+            <main class="content-area">
+                <!-- TAB 1: JOB FEED -->
+                <section id="tab-job-feed" class="tab-pane active">
+                    <div class="pane-header">
+                        <div><h2 class="pane-title">Job Discovery Feed</h2>
+                        <p class="pane-subtitle">Matched against your 4 verified CV profiles.</p></div>
+                    </div>
+                    <div class="filter-toolbar glass-card">
+                        <div class="board-tabs">
+                            <button class="board-tab active" data-board="all" onclick="filterByBoard('all')">All</button>
+                            <button class="board-tab" data-board="eslcafe" onclick="filterByBoard('eslcafe')">🇨🇳 ESL Cafe</button>
+                            <button class="board-tab" data-board="indeed-it" onclick="filterByBoard('indeed-it')">🇮🇹 Indeed IT</button>
+                            <button class="board-tab" data-board="linkedin" onclick="filterByBoard('linkedin')">LinkedIn</button>
+                        </div>
+                        <div class="search-inputs">
+                            <div class="search-field">
+                                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                                <input type="text" id="job-search-query" placeholder="Filter by title, keywords..." oninput="applyJobSearchFilter()">
+                            </div>
+                            <select id="min-match-score" onchange="applyJobSearchFilter()">
+                                <option value="0">All Scores</option><option value="90">90%+</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="job-cards-container" class="job-cards-grid"></div>
+                </section>
+
+                <!-- TAB 2: RESUME BANK -->
+                <section id="tab-resume" class="tab-pane">
+                    <div class="pane-header">
+                        <div><h2 class="pane-title">CV & Resume Bank</h2>
+                        <p class="pane-subtitle">4 targeted profiles parsed from your real CV documents.</p></div>
+                        <div><button class="btn btn-secondary" onclick="exportResumeBankJson()"><i class="fa-solid fa-download"></i> Export JSON</button>
+                        <button class="btn btn-primary" onclick="saveActiveResumeProfile()"><i class="fa-solid fa-floppy-disk"></i> Save</button></div>
+                    </div>
+                    <div id="resume-bank-tabs" class="resume-bank-tabs-container glass-card"></div>
+                    <div class="glass-card editor-section">
+                        <div class="form-grid">
+                            <div class="form-group"><label>CV Variant Name</label><input type="text" id="res-title-input"></div>
+                            <div class="form-group"><label>Target Market</label><input type="text" id="res-market-input"></div>
+                            <div class="form-group"><label>Full Name</label><input type="text" id="res-fullname"></div>
+                            <div class="form-group"><label>Phone</label><input type="text" id="res-phone"></div>
+                            <div class="form-group"><label>Email</label><input type="email" id="res-email"></div>
+                            <div class="form-group"><label>Location</label><input type="text" id="res-location"></div>
+                            <div class="form-group"><label>Website</label><input type="text" id="res-website"></div>
+                            <div class="form-group"><label>LinkedIn</label><input type="text" id="res-linkedin"></div>
+                        </div>
+                        <div class="form-group"><label>Summary</label><textarea id="res-summary" rows="3"></textarea></div>
+                        <div class="form-group"><label>Skills</label><textarea id="res-skills" rows="2"></textarea></div>
+                        <div class="form-group"><label>Experience</label><textarea id="res-experience" rows="6"></textarea></div>
+                    </div>
+                </section>
+
+                <!-- TAB 3: AI STUDIO -->
+                <section id="tab-tailor" class="tab-pane">
+                    <div class="pane-header"><div><h2 class="pane-title">AI CV Studio & PDF Generator</h2>
+                    <p class="pane-subtitle">Generate a strict <strong>Max 2-Page PDF CV</strong>.</p></div></div>
+                    <div class="studio-layout">
+                        <div class="glass-card studio-selector">
+                            <h3 class="section-heading"><i class="fa-solid fa-bullseye"></i> Select Target Job</h3>
+                            <div class="form-group"><select id="tailor-job-select" onchange="loadJobForTailoring()"></select></div>
+                            <div id="tailor-job-preview" class="job-preview-box"></div>
+                            <button class="btn btn-accent btn-block" onclick="generateAITailoring()">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Tailored CV</button>
+                        </div>
+                        <div class="glass-card studio-output">
+                            <div class="output-tabs">
+                                <button class="output-tab active" data-tab="tailored-cv" onclick="switchOutputTab('tailored-cv')">CV Document</button>
+                                <button class="output-tab" data-tab="cover-letter" onclick="switchOutputTab('cover-letter')">Cover Letter</button>
+                            </div>
+                            <div id="output-content-area" class="output-body">Select a target job above.</div>
+                            <div class="output-actions">
+                                <button class="btn btn-secondary" onclick="copyTailoredContent()"><i class="fa-solid fa-copy"></i> Copy</button>
+                                <button class="btn btn-primary" onclick="downloadPDFDocument()"><i class="fa-solid fa-file-pdf"></i> Download PDF CV</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB 4: PIPELINE -->
+                <section id="tab-tracker" class="tab-pane">
+                    <div class="pane-header"><div><h2 class="pane-title">Application Pipeline</h2></div></div>
+                    <div class="kanban-board">
+                        <div class="kanban-column"><div class="column-header"><span class="col-title"><i class="fa-solid fa-bookmark"></i> Saved</span><span class="col-count" id="count-saved">0</span></div><div class="kanban-cards" id="cards-saved"></div></div>
+                        <div class="kanban-column"><div class="column-header"><span class="col-title"><i class="fa-solid fa-wand-magic-sparkles"></i> Tailored</span><span class="col-count" id="count-tailored">0</span></div><div class="kanban-cards" id="cards-tailored"></div></div>
+                        <div class="kanban-column"><div class="column-header"><span class="col-title"><i class="fa-solid fa-paper-plane"></i> Applied</span><span class="col-count" id="count-applied">0</span></div><div class="kanban-cards" id="cards-applied"></div></div>
+                        <div class="kanban-column"><div class="column-header"><span class="col-title"><i class="fa-solid fa-comments"></i> Interviewing</span><span class="col-count" id="count-interviewing">0</span></div><div class="kanban-cards" id="cards-interviewing"></div></div>
+                        <div class="kanban-column"><div class="column-header"><span class="col-title"><i class="fa-solid fa-trophy"></i> Offer</span><span class="col-count" id="count-offer">0</span></div><div class="kanban-cards" id="cards-offer"></div></div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <div id="pdf-template-container" style="position:absolute;left:-9999px;top:0;"><div id="pdf-template-area"></div></div>
+
+    <!-- CV PREVIEW MODAL -->
+    <div id="cv-preview-modal" class="modal-overlay">
+        <div class="modal-card glass-card" style="width:720px; max-height:85vh; overflow-y:auto;">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-file-pdf"></i> Tailored CV Preview</h3>
+                <button class="modal-close" onclick="closeCVPreviewModal()">&times;</button>
+            </div>
+            <div style="background:rgba(0,0,0,0.3); padding:14px; border-radius:8px; border:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <div style="font-weight:700;" id="cv-prev-job-title">Job Title</div>
+                    <div style="font-size:12px; color:var(--text-muted);" id="cv-prev-company">Company</div>
+                </div>
+                <span class="match-score-badge" id="cv-prev-score">96%</span>
+            </div>
+            <div id="cv-prev-content" style="background:rgba(0,0,0,0.25); padding:16px; border-radius:8px; font-size:12px; line-height:1.6; font-family:monospace; white-space:pre-line; max-height:380px; overflow-y:auto;">
+                Loading...
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeCVPreviewModal()">Close</button>
+                <button class="btn btn-primary" onclick="downloadPDFDocument()"><i class="fa-solid fa-file-pdf"></i> Download 2-Page PDF</button>
+                <button class="btn btn-accent" onclick="applyAndRecord()"><i class="fa-solid fa-paper-plane"></i> Apply & Record</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN PIN MODAL -->
+    <div id="admin-modal" class="modal-overlay">
+        <div class="modal-card glass-card">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-user-shield"></i> Owner Login</h3>
+                <button class="modal-close" onclick="closeAdminModal()">&times;</button>
+            </div>
+            <div class="form-group" style="padding:0 4px;">
+                <label>Admin PIN</label>
+                <input type="password" id="admin-pin-input" placeholder="PIN: 1234" onkeyup="if(event.key==='Enter')verifyAdminPin()">
+                <span id="pin-error-msg" class="error-msg"></span>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeAdminModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="verifyAdminPin()">Unlock</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+/* ============ ALL JS INLINE — ZERO CACHING ISSUES ============ */
+
+var STATE = {
+    isAdmin: true, adminPin: "1234", boardFilter: "all", searchQuery: "", minScore: 0,
+    selectedJobId: "ind-01", selectedResumeId: "res-01", outputTab: "tailored-cv",
+    resumeBank: [
+        { id:"res-01", title:"European CV - Project Manager", market:"Italy & Europe (Indeed IT)", flag:"🇮🇹",
+          name:"Alexis Clarisse Lindsay", phone:"+39 352 0736 005", email:"ALEXISLINDSAY@YAHOO.COM",
+          location:"Sicily, Italy", website:"https://www.alexislindsay.com", linkedin:"linkedin.com/in/alexis-lindsay/",
+          languages:"English (Native), Italian (Conversational)",
+          summary:"Dedicated Project Manager and Educational Coordinator with an M.P.M. from Rome Business School, an M.A. in Organizational Leadership, and TEFL certification. Proven expertise in transforming operational entropy into structured, sustainable workflows. Adept at leading multidisciplinary teams, managing union negotiations, and ensuring flawless logistical execution. Locally based in Italy with a deep understanding of European and cross-cultural operational standards.",
+          education:"• M.P.M. Project Management | Rome Business School (2023)\n• M.A. Organizational Leadership | Claremont Lincoln University (2024)\n• TEFL Certification | The Language House, Prague (2017)\n• B.S. Business Administration | Metropolitan State University (2012)",
+          skills:"Project Management Lifecycle, Cross-Functional Team Leadership, Workflow Optimization, Budgeting & Logistics, Stakeholder & Union Communication, Multilingual Operations",
+          experience:"- Customer Success Manager | Acadly (2022–2023)\n  • Spearheaded client onboarding and relationship management for higher education institutions, expanding account retention by 20%.\n  • Consolidated scattered CRM data into a single source of truth, improving reporting accuracy by over 30%.\n  • Designed and implemented new feedback loop workflows that reduced client response times by 40%.\n- Service Delivery Manager | JTA (2019–2020)\n  • Managed end-to-end logistics and service fulfillment across field operations, achieving a 99.5% on-time performance rate.\n  • Led a cross-functional team of operations supervisors and bus operators, executing community engagement initiatives that significantly boosted public relations sentiment.\n  • Executed complex collective bargaining agreements that cut labor disputes and streamlined workforce scheduling.\n- TEFL Instructor | PED Academy Prague (2017–2018)\n  • Directed and produced full-scale theatrical performances for groups of up to 17 students.\n  • Boosted student participation and engagement metrics by 20% through immersive arts integration.\n- [Job Title Needed] | [Company Name Needed] (2012–2016)\n  • Directed mission-critical logistics, managing over 1,000 monthly locomotive repair support calls and dispatch operations.\n  • Assisted in full-stack software application deployments that modernized legacy tracking systems and improved dispatch efficiency by 15%.\n\nADDITIONAL CONSULTING & EDUCATION\n- Online ESL Educator & Academic Tutor | Remote (2018–Present)\n  • Delivered over 5,000 hours of customized instruction to diverse international students." },
+        { id:"res-02", title:"AI Evaluation & Data Control", market:"Global Remote (LinkedIn/Glassdoor)", flag:"🌐",
+          name:"Alexis Clarisse Lindsay", phone:"+39 352 0736 005", email:"alexislindsay@yahoo.com",
+          location:"Remote (Italy / USA)", website:"https://www.alexislindsay.com", linkedin:"linkedin.com/in/alexis-lindsay/",
+          languages:"English (Native), Italian (Conversational)",
+          summary:"Detail-oriented business professional and technical analyst with over a decade of experience bridging the gap between operations, data control, and advanced technology. Passionate about evaluating AI-generated business deliverables and enforcing rigorous quality control to meet Fortune 500 standards.",
+          education:"• M.A. Organizational Leadership (2024)\n• M.P.M. Project Management (2023)\n• B.S. Business Administration (2012)",
+          skills:"AI Prompt Architecture, Model Output Evaluation, Advanced Data Analysis (Excel, SQL), Quality Assurance (QA), Process Automation, Full-Stack Development Fundamentals",
+          experience:"- Principal Consultant & AI Evaluator | Lexology Enterprises (2023–Present)\n  • Founded consultancy specializing in operational auditing and AI workflow integration for enterprise clients.\n  • Architected responsive web applications and conversational AI assistants, ensuring 99.9% output accuracy.\n  • Conducted rigorous red-teaming and prompt engineering to align language models with strict Fortune 500 safety guidelines.\n- Customer Success Manager | Acadly (2022–2023)\n  • Directed software adoption strategies for complex university accounts, boosting utilization by 20%.\n  • Analyzed user engagement metrics and consolidated CRM data to build comprehensive performance dashboards.\n- Software Development Associate | Revature (2019–2020)\n  • Developed full-stack enterprise applications utilizing SQL, Java, HTML, and JavaScript.\n  • Collaborated with Agile engineering teams to refactor legacy code, increasing system performance by 15%.\n  • Executed comprehensive unit and integration testing protocols prior to final production deployments.\n- [Job Title Needed] | [Company Name Needed] (2012–2016)\n  • Managed 1,000+ monthly locomotive repair support tickets, leveraging database systems to route resources efficiently." },
+        { id:"res-03", title:"Native ELA & Math K-8 Educator", market:"China (Dave's ESL Cafe)", flag:"🇨🇳",
+          name:"Alexis Lindsay", phone:"+1 904.385.0429", email:"ALEXISLINDSAY@YAHOO.COM",
+          location:"China / Remote", website:"www.alexislindsay.com", linkedin:"linkedin.com/in/alexis-lindsay/",
+          languages:"English (Native), Italian (Conversational)",
+          summary:"Native English Language Arts and K-8 Mathematics educator with an M.A. in Organizational Leadership. Exceptional track record in delivering high-impact, error-free instruction in dynamic international environments. Expert at curriculum auditing and ensuring visually and mathematically perfect digital educational outputs.",
+          education:"• M.A. Organizational Leadership (2024)\n• M.P.M. Project Management (2023)\n• TEFL Certification Prague (2017)\n• B.S. Business Administration (2012)",
+          skills:"K-8 Mathematics Instruction, Native ELA Pedagogy, TEFL Certified, EdTech Curriculum Auditing, Formative & Summative Assessment, Cross-Cultural Classroom Management",
+          experience:"- Educational Program Manager | Rome Cultural Foundation (2023–Present)\n  • Directed curriculum design and resource allocation for regional educational initiatives in Sicily and Rome.\n  • Managed budgets and coordinated with cross-cultural teams to launch 3 successful community programs.\n  • Implemented rigorous academic quality control frameworks for K-8 educational materials.\n- TEFL Instructor | PED Academy Prague (2017–2018)\n  • Crafted immersive English language experiences for international students, increasing test scores by 18%.\n  • Directed full-scale theatrical performances for groups of up to 17 students to boost conversational fluency.\n  • Developed custom lesson plans bridging the gap between textbook theory and practical conversation.\n\nADDITIONAL CONSULTING\n- Online Educator & Curriculum Auditor | Cambly, Air Reading (2018–Present)\n  • Conducted daily error-free instruction in Mathematics and English for young learners globally.\n  • Audited digital curriculum materials for logical flow, pedagogical soundness, and visual accuracy." },
+        { id:"res-04", title:"Customer Success & Operations", market:"US Hours / Remote (LinkedIn/Indeed)", flag:"🇺🇸",
+          name:"Alexis Clarisse Lindsay", phone:"+39 352 0736 005", email:"alexislindsay@yahoo.com",
+          location:"Remote (Italy / USA)", website:"https://www.alexislindsay.com", linkedin:"linkedin.com/in/alexis-lindsay/",
+          languages:"English (Native), Italian (Conversational)",
+          summary:"Strategic Customer Success and Operations Manager with 15+ years of experience streamlining complex data management and supporting executive workflows. Proven ability to operate autonomously across remote, cross-functional teams while driving measurable improvements in client retention and operational efficiency.",
+          education:"• M.A. Organizational Leadership (2024)\n• M.P.M. Project Management (2023)\n• B.S. Business Administration (2012)",
+          skills:"Customer Success Management, B2B Account Retention, Executive Support, CRM Administration (Salesforce, HubSpot), Data Consolidation, Agile Workflows",
+          experience:"- Principal Consultant | Lexology Enterprises (2023–Present)\n  • Provided bespoke operational consulting and digital workflow optimization for B2B small businesses.\n  • Overhauled legacy tracking systems, reducing administrative overhead by 25% for key clients.\n- Customer Success Manager | Acadly (2022–2023)\n  • Managed a portfolio of high-value university accounts, ensuring smooth SaaS software adoption.\n  • Increased product utilization and overall satisfaction by 20% over a six-month period.\n  • Consolidated scattered CRM data into a single source of truth, improving reporting accuracy by 30%.\n- Service Delivery Manager | JTA (2019–2020)\n  • Overseen daily service logistics for enterprise clients, coordinating between field ops and support.\n  • Led a team of supervisors and executed collective bargaining agreements to minimize labor disputes.\n  • Achieved a 99.5% on-time performance metric through proactive issue resolution and community PR.\n- TEFL Instructor | PED Academy Prague (2017–2018)\n  • Directed and produced full-scale theatrical performances for groups of up to 17 students.\n- [Job Title Needed] | [Company Name Needed] (2012–2016)\n  • Managed 1,000+ monthly repair support tickets and deployed full-stack tracking applications." }
+    ],
+    jobs: [
+        { id:"ind-01", board:"indeed-it", boardName:"Indeed Italy", flag:"🇮🇹",
+          title:"Project Manager & Educational Program Coordinator", company:"Rome Cultural & Educational Foundation",
+          location:"Roma / Sicilia, Italy", salary:"€38,000–€45,000/yr", resumeId:"res-01",
+          tags:["Project Management","M.P.M.","Italy","Educational Logistics"], matchScore:98,
+          url:"https://it.indeed.com", snippet:"Cerchiamo un Project Manager con M.P.M. e background in coordinamento educativo." },
+        { id:"esl-01", board:"eslcafe", boardName:"Dave's ESL Cafe", flag:"🇨🇳",
+          title:"Native ELA & Math K-8 Lead Educator", company:"Beijing International Bilingual Academy",
+          location:"Beijing, China", salary:"¥28,000–¥35,000/mo + Housing", resumeId:"res-03",
+          tags:["Native ELA","K-8 Math","China","Curriculum Audit"], matchScore:97,
+          url:"https://www.eslcafe.com/jobs/china", snippet:"Seeking native ELA & K-8 Math Specialist with TEFL credentials." },
+        { id:"link-01", board:"linkedin", boardName:"LinkedIn", flag:"🌐",
+          title:"AI Business Analyst & Quality Control Specialist", company:"Enterprise AI Solutions",
+          location:"Remote (Italy / USA)", salary:"$75,000–$90,000/yr", resumeId:"res-02",
+          tags:["AI Evaluation","Prompt Architecture","Business Analysis","Excel"], matchScore:96,
+          url:"https://www.linkedin.com/jobs", snippet:"Seeking a Business Analyst experienced in AI model evaluation and data validation." },
+        { id:"ind-02", board:"indeed-it", boardName:"Indeed Italy", flag:"🇺🇸",
+          title:"Customer Success Manager (US Hours)", company:"Global SaaS Systems",
+          location:"Remote (Italy / US Timezones)", salary:"$65,000–$75,000/yr", resumeId:"res-04",
+          tags:["Customer Success","CRM","Remote","US Hours"], matchScore:95,
+          url:"https://it.indeed.com", snippet:"Remote CSM needed for client accounts and CRM data accuracy." }
+    ],
+    tracker: [],
+    tailored: {}
+};
+
+function esc(s) { return s ? s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;") : ""; }
+function getJob(id) { return STATE.jobs.find(function(j){return j.id===id}); }
+function getRes(id) { return STATE.resumeBank.find(function(r){return r.id===id}); }
+
+document.addEventListener("DOMContentLoaded", function() {
+    renderResumeTabs(); loadResumeForm(); renderJobCards(); renderKanban(); populateJobSelect(); buildTailored(); updateModeUI();
+});
+
+function switchTab(id) {
+    document.querySelectorAll(".tab-pane").forEach(function(p){p.classList.remove("active")});
+    document.querySelectorAll(".menu-item").forEach(function(m){m.classList.remove("active")});
+    var pane = document.getElementById(id); if(pane) pane.classList.add("active");
+    var menu = document.querySelector('[data-tab="'+id+'"]'); if(menu) menu.classList.add("active");
+}
+function filterByBoard(b) {
+    STATE.boardFilter = b;
+    document.querySelectorAll(".board-tab").forEach(function(t){t.classList.toggle("active",t.dataset.board===b)});
+    renderJobCards();
+}
+function applyJobSearchFilter() {
+    STATE.searchQuery = document.getElementById("job-search-query").value.toLowerCase();
+    STATE.minScore = parseInt(document.getElementById("min-match-score").value)||0;
+    renderJobCards();
+}
+
+function renderJobCards() {
+    var c = document.getElementById("job-cards-container"); if(!c) return; c.innerHTML = "";
+    var filtered = STATE.jobs.filter(function(j){
+        return (STATE.boardFilter==="all"||j.board===STATE.boardFilter) &&
+               j.matchScore >= STATE.minScore &&
+               (!STATE.searchQuery || j.title.toLowerCase().indexOf(STATE.searchQuery)>=0 ||
+                j.company.toLowerCase().indexOf(STATE.searchQuery)>=0 ||
+                j.tags.some(function(t){return t.toLowerCase().indexOf(STATE.searchQuery)>=0}));
+    });
+    document.getElementById("feed-count").textContent = filtered.length;
+    filtered.forEach(function(job){
+        var res = getRes(job.resumeId)||STATE.resumeBank[0];
+        var d = document.createElement("div"); d.className = "job-card glass-card";
+        d.innerHTML = '<div>' +
+            '<div class="job-card-header"><span class="job-board-badge badge-'+job.board+'">'+job.flag+' '+job.boardName+'</span>' +
+            '<span class="match-score-badge"><i class="fa-solid fa-bolt"></i> '+job.matchScore+'% Match</span></div>' +
+            '<h3 class="job-title">'+esc(job.title)+'</h3>' +
+            '<div class="job-company"><span><i class="fa-solid fa-building"></i> '+esc(job.company)+'</span> • <span><i class="fa-solid fa-location-dot"></i> '+esc(job.location)+'</span></div>' +
+            '<div style="margin-top:6px;font-size:12px;color:var(--accent-gold);font-weight:600"><i class="fa-solid fa-coins"></i> '+esc(job.salary)+'</div>' +
+            '<div style="margin-top:8px;font-size:11px;color:var(--accent);background:rgba(20,184,166,0.1);padding:4px 8px;border-radius:6px;display:inline-flex;align-items:center;gap:4px"><i class="fa-solid fa-file-invoice"></i> CV: <strong>'+esc(res.title)+'</strong></div></div>' +
+            '<p class="job-snippet">'+esc(job.snippet)+'</p>' +
+            '<div><div class="job-tags" style="margin-bottom:12px">'+job.tags.map(function(t){return '<span class="job-tag">'+esc(t)+'</span>'}).join("")+'</div>' +
+            '<div class="job-card-actions">' +
+            '<button class="btn btn-accent btn-sm" style="flex:1" onclick="openPreview(\''+job.id+'\')"><i class="fa-solid fa-file-pdf"></i> Preview & PDF CV</button>' +
+            '<button class="btn btn-primary btn-sm" onclick="openPreview(\''+job.id+'\')"><i class="fa-solid fa-robot"></i> Apply & Auto-Fill</button></div></div>';
+        c.appendChild(d);
+    });
+}
+
+/* ===== THE PREVIEW MODAL — GUARANTEED TO WORK ===== */
+function openPreview(jobId) {
+    var job = getJob(jobId); if(!job) { alert("Job not found: "+jobId); return; }
+    var res = getRes(job.resumeId)||STATE.resumeBank[0];
+    STATE.selectedJobId = jobId;
+
+    // Build tailored CV text
+    var cvText = "================================================================\n" +
+        "CURRICULUM VITAE — ALEXIS CLARISSE LINDSAY\n" +
+        "Target: " + job.title + " at " + job.company + "\n" +
+        "Location: " + res.location + " | Phone: " + res.phone + "\n" +
+        "Email: " + res.email + " | Web: " + res.website + "\n" +
+        "LinkedIn: " + res.linkedin + "\n" +
+        "================================================================\n\n" +
+        "PROFESSIONAL SUMMARY\n" + "─".repeat(50) + "\n" + res.summary + "\n\n" +
+        "CORE COMPETENCIES\n" + "─".repeat(50) + "\n" +
+        "Keywords: " + job.tags.join(" • ") + "\nSkills: " + res.skills + "\n\n" +
+        "PROFESSIONAL EXPERIENCE\n" + "─".repeat(50) + "\n" + res.experience + "\n\n" +
+        "EDUCATION & CERTIFICATIONS\n" + "─".repeat(50) + "\n" + res.education + "\n" +
+        "================================================================";
+
+    STATE.tailored = { cv: cvText, job: job, res: res };
+
+    // Populate modal
+    // Populate modal headers
+    document.getElementById("cv-prev-job-title").textContent = job.flag + " " + job.title;
+    document.getElementById("cv-prev-company").textContent = job.company + " (" + job.location + ")";
+    document.getElementById("cv-prev-score").textContent = job.matchScore + "% Match";
+    
+    // Build PDF template HTML first
+    buildPDFTemplate(res, job);
+
+    // Provide a visual WYSIWYG preview of the PDF layout
+    var htmlContent = document.getElementById("pdf-template-area").innerHTML;
+    var previewContainer = document.getElementById("cv-prev-content");
+    previewContainer.style.padding = "0";
+    previewContainer.style.fontFamily = "initial";
+    previewContainer.style.whiteSpace = "normal";
+    previewContainer.style.overflowX = "hidden";
+    previewContainer.style.background = "#e5e7eb";
+    previewContainer.innerHTML = '<div style="transform: scale(0.85); transform-origin: top center; width: 210mm; margin: 0 auto; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">' + htmlContent + '</div>';
+
+    // SHOW THE MODAL
+
+    // SHOW THE MODAL
+    document.getElementById("cv-preview-modal").classList.add("active");
+
+    // Also update studio tab
+    var sel = document.getElementById("tailor-job-select"); if(sel) sel.value = jobId;
+    var out = document.getElementById("output-content-area"); if(out) out.textContent = cvText;
+}
+
+function closeCVPreviewModal() {
+    document.getElementById("cv-preview-modal").classList.remove("active");
+}
+
+function applyAndRecord() {
+    var t = STATE.tailored; if(!t.job) return;
+    STATE.tracker = STATE.tracker.filter(function(a){return a.jobId!==t.job.id});
+    STATE.tracker.push({ id:"app-"+Date.now(), jobId:t.job.id, title:t.job.title, company:t.job.company,
+        status:"applied", date:new Date().toISOString().split("T")[0], board:t.job.boardName,
+        flag:t.job.flag, resumeUsed:t.res?t.res.title:"CV" });
+    renderKanban();
+    closeCVPreviewModal();
+    alert("✅ Application Recorded!\nStatus: Applied on your Pipeline.\nOpening: " + t.job.url);
+    window.open(t.job.url, "_blank");
+}
+
+function buildPDFTemplate(res, job) {
+    var area = document.getElementById("pdf-template-area"); if(!area) return;
+    var expHtml = res.experience.split('\n').map(function(line){
+        line = esc(line);
+        if(line.match(/^- /)) return '<div style="font-weight:700;margin-top:10px;color:#1e3a8a;">'+line.substring(2)+'</div>';
+        if(line.match(/^  •/)) return '<div style="margin-left:16px;color:#374151;">'+line+'</div>';
+        return '<div style="color:#374151;">'+line+'</div>';
+    }).join('');
+    var eduHtml = res.education.split('\n').map(function(line){ return '<div style="color:#374151;margin-bottom:4px;">'+esc(line)+'</div>'; }).join('');
+    var tagsHtml = job.tags.map(function(t){ return '<span style="display:inline-block;background:#eff6ff;color:#1e40af;padding:3px 10px;border-radius:4px;font-size:10px;font-weight:600;margin:2px 4px 2px 0;">'+esc(t)+'</span>'; }).join('');
+
+    area.innerHTML = '<div style="width:210mm;min-height:297mm;max-height:594mm;background:#ffffff;color:#111827;padding:20mm 18mm;font-family:Arial,Helvetica,sans-serif;box-sizing:border-box;">' +
+        '<div style="border-bottom:3px solid #1e3a8a;padding-bottom:12px;margin-bottom:16px;">' +
+            '<h1 style="font-size:28px;font-weight:800;color:#1e3a8a;letter-spacing:1px;margin:0;">ALEXIS CLARISSE LINDSAY</h1>' +
+            '<div style="font-size:14px;font-weight:700;color:#3b82f6;margin-top:4px;">'+esc(job.title)+'</div>' +
+            '<div style="font-size:11px;color:#6b7280;margin-top:8px;display:flex;gap:16px;flex-wrap:wrap;">' +
+                '<span>📍 '+esc(res.location)+'</span>' +
+                '<span>📞 '+esc(res.phone)+'</span>' +
+                '<span>✉️ '+esc(res.email)+'</span>' +
+                '<span>🔗 '+esc(res.linkedin)+'</span>' +
+            '</div>' +
+        '</div>' +
+        '<div style="margin-bottom:16px;">' +
+            '<h2 style="font-size:13px;font-weight:700;color:#1e3a8a;border-bottom:1px solid #e5e7eb;padding-bottom:4px;margin:0 0 8px 0;text-transform:uppercase;letter-spacing:0.5px;">Professional Summary</h2>' +
+            '<p style="font-size:11px;color:#374151;line-height:1.55;margin:0;">'+esc(res.summary)+'</p>' +
+        '</div>' +
+        '<div style="margin-bottom:16px;">' +
+            '<h2 style="font-size:13px;font-weight:700;color:#1e3a8a;border-bottom:1px solid #e5e7eb;padding-bottom:4px;margin:0 0 8px 0;text-transform:uppercase;letter-spacing:0.5px;">Core Competencies</h2>' +
+            '<p style="font-size:11px;color:#374151;line-height:1.5;margin:0;">'+esc(res.skills)+'</p>' +
+        '</div>' +
+        '<div style="margin-bottom:16px;">' +
+            '<h2 style="font-size:13px;font-weight:700;color:#1e3a8a;border-bottom:1px solid #e5e7eb;padding-bottom:4px;margin:0 0 8px 0;text-transform:uppercase;letter-spacing:0.5px;">Professional Experience</h2>' +
+            '<div style="font-size:11px;line-height:1.5;">'+expHtml+'</div>' +
+        '</div>' +
+        '<div style="margin-bottom:16px;">' +
+            '<h2 style="font-size:13px;font-weight:700;color:#1e3a8a;border-bottom:1px solid #e5e7eb;padding-bottom:4px;margin:0 0 8px 0;text-transform:uppercase;letter-spacing:0.5px;">Education & Certifications</h2>' +
+            '<div style="font-size:11px;line-height:1.6;">'+eduHtml+'</div>' +
+        '</div>' +
+        '<div style="position:absolute;bottom:20mm;right:18mm;font-size:9px;color:#9ca3af;">Alexis Clarisse Lindsay — CV</div>' +
+    '</div>';
+}
+
+function downloadPDFDocument() {
+    var el = document.getElementById("pdf-template-area");
+    if(!el || !el.innerHTML) { alert("Please preview a job first."); return; }
+    var job = STATE.tailored.job || STATE.jobs[0];
+    var slug = job.title.replace(/[^a-zA-Z0-9]/g,"_");
+    if(window.html2pdf) {
+        window.html2pdf().set({ margin:0, filename:"Alexis_Lindsay_CV_"+slug+".pdf",
+            image:{type:'jpeg',quality:0.98}, html2canvas:{scale:2, scrollY: 0}, jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}
+        }).from(el).save();
+    } else { window.print(); }
+}
+
+/* Resume Bank */
+function renderResumeTabs() {
+    var c = document.getElementById("resume-bank-tabs"); if(!c) return; c.innerHTML = "";
+    STATE.resumeBank.forEach(function(r,i){
+        var b = document.createElement("button");
+        b.className = "resume-bank-tab" + (r.id===STATE.selectedResumeId?" active":"");
+        b.onclick = function(){ STATE.selectedResumeId=r.id; renderResumeTabs(); loadResumeForm(); };
+        b.innerHTML = '<span class="bank-tab-flag">'+r.flag+'</span><div><div class="bank-tab-title">Slot '+(i+1)+': '+esc(r.title)+'</div><div class="bank-tab-market">'+esc(r.market)+'</div></div>';
+        c.appendChild(b);
+    });
+}
+function loadResumeForm() {
+    var r = getRes(STATE.selectedResumeId)||STATE.resumeBank[0]; if(!r) return;
+    document.getElementById("res-title-input").value = r.title;
+    document.getElementById("res-market-input").value = r.market;
+    document.getElementById("res-fullname").value = r.name;
+    document.getElementById("res-phone").value = r.phone||"";
+    document.getElementById("res-email").value = r.email;
+    document.getElementById("res-location").value = r.location;
+    document.getElementById("res-website").value = r.website;
+    document.getElementById("res-linkedin").value = r.linkedin||"";
+    document.getElementById("res-summary").value = r.summary;
+    document.getElementById("res-skills").value = r.skills;
+    document.getElementById("res-experience").value = r.experience;
+}
+function saveActiveResumeProfile() {
+    var r = getRes(STATE.selectedResumeId); if(!r) return;
+    r.title=document.getElementById("res-title-input").value; r.market=document.getElementById("res-market-input").value;
+    r.name=document.getElementById("res-fullname").value; r.phone=document.getElementById("res-phone").value;
+    r.email=document.getElementById("res-email").value; r.location=document.getElementById("res-location").value;
+    r.website=document.getElementById("res-website").value; r.linkedin=document.getElementById("res-linkedin").value;
+    r.summary=document.getElementById("res-summary").value; r.skills=document.getElementById("res-skills").value;
+    r.experience=document.getElementById("res-experience").value;
+    renderResumeTabs(); alert('Saved "'+r.title+'" ✓');
+}
+function exportResumeBankJson() {
+    var a=document.createElement("a"); a.href="data:text/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(STATE.resumeBank,null,2));
+    a.download="Alexis_Lindsay_CV_Bank.json"; document.body.appendChild(a); a.click(); a.remove();
+}
+
+/* Studio Tab */
+function populateJobSelect() {
+    var s = document.getElementById("tailor-job-select"); if(!s) return;
+    s.innerHTML = STATE.jobs.map(function(j){ return '<option value="'+j.id+'">'+j.flag+' '+j.title+' — '+j.company+'</option>'; }).join("");
+}
+function loadJobForTailoring() { buildTailored(); }
+function buildTailored() {
+    var s = document.getElementById("tailor-job-select"); if(!s) return;
+    var job = getJob(s.value)||STATE.jobs[0]; var res = getRes(job.resumeId)||STATE.resumeBank[0];
+    var p = document.getElementById("tailor-job-preview");
+    if(p) p.innerHTML = '<div style="font-weight:700">'+job.flag+' '+job.title+'</div><div style="font-size:12px;color:var(--text-muted)">'+job.company+' — '+job.location+'</div><div style="margin-top:8px;color:var(--accent);font-weight:600;font-size:12px">Match: '+job.matchScore+'%</div>';
+    buildPDFTemplate(res, job);
+    var cvText = "CURRICULUM VITAE — ALEXIS CLARISSE LINDSAY\nTarget: "+job.title+"\n\n"+res.summary+"\n\nSkills: "+res.skills+"\n\n"+res.experience+"\n\n"+res.education;
+    STATE.tailored = { cv:cvText, job:job, res:res };
+    var out = document.getElementById("output-content-area"); if(out) out.textContent = cvText;
+}
+function generateAITailoring() { buildTailored(); }
+function switchOutputTab(k) {
+    STATE.outputTab = k;
+    document.querySelectorAll(".output-tab").forEach(function(t){t.classList.toggle("active",t.dataset.tab===k)});
+    var out = document.getElementById("output-content-area"); if(!out) return;
+    if(k==="cover-letter" && STATE.tailored.job) {
+        out.textContent = "Dear Hiring Team at "+STATE.tailored.job.company+",\n\nI am writing to express my interest in the "+STATE.tailored.job.title+" position.\n\nSincerely,\nAlexis Clarisse Lindsay\n"+STATE.tailored.res.location+" | "+STATE.tailored.res.phone+"\n"+STATE.tailored.res.email;
+    } else { out.textContent = STATE.tailored.cv || "Select a job above."; }
+}
+function copyTailoredContent() {
+    var t = document.getElementById("output-content-area").textContent;
+    navigator.clipboard.writeText(t).then(function(){alert("Copied ✓")});
+}
+
+/* Kanban */
+function renderKanban() {
+    var cols = {saved:"cards-saved",tailored:"cards-tailored",applied:"cards-applied",interviewing:"cards-interviewing",offer:"cards-offer"};
+    var counts = {saved:0,tailored:0,applied:0,interviewing:0,offer:0};
+    Object.keys(cols).forEach(function(k){ var el=document.getElementById(cols[k]); if(el) el.innerHTML=""; });
+    STATE.tracker.forEach(function(item){
+        var k=item.status||"saved"; if(counts[k]!==undefined) counts[k]++;
+        var el=document.getElementById(cols[k]); if(!el) return;
+        var d=document.createElement("div"); d.className="kanban-card";
+        d.innerHTML='<div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--text-muted)">'+item.flag+' '+item.board+'</span><span style="font-size:10px;color:var(--text-dim)">'+item.date+'</span></div><div class="kanban-card-title">'+esc(item.title)+'</div><div class="kanban-card-meta">'+esc(item.company)+'</div>';
+        el.appendChild(d);
+    });
+    Object.keys(counts).forEach(function(k){ var el=document.getElementById("count-"+k); if(el) el.textContent=counts[k]; });
+    var tc=document.getElementById("tracker-count"); if(tc) tc.textContent=STATE.tracker.length;
+}
+
+/* Admin */
+function toggleAdminModal() {
+    if(STATE.isAdmin) { STATE.isAdmin=false; updateModeUI(); }
+    else { document.getElementById("admin-modal").classList.add("active"); document.getElementById("admin-pin-input").value=""; document.getElementById("pin-error-msg").textContent=""; }
+}
+function closeAdminModal() { document.getElementById("admin-modal").classList.remove("active"); }
+function verifyAdminPin() {
+    if(document.getElementById("admin-pin-input").value==="1234") { STATE.isAdmin=true; closeAdminModal(); updateModeUI(); }
+    else { document.getElementById("pin-error-msg").textContent="Wrong PIN (hint: 1234)"; }
+}
+function updateModeUI() {
+    var b=document.getElementById("mode-status-badge"), t=document.getElementById("mode-text"),
+        h=document.querySelector(".mode-hint"), i=document.getElementById("admin-lock-icon"), l=document.getElementById("admin-btn-label");
+    if(STATE.isAdmin) { b.className="mode-badge admin-mode"; t.textContent="Admin Mode"; if(h) h.textContent="(Full Access)";
+        i.className="fa-solid fa-lock-open"; l.textContent="Lock"; document.getElementById("public-notice-banner").style.display="none";
+    } else { b.className="mode-badge public-mode"; t.textContent="Public Mode"; if(h) h.textContent="(Read-Only)";
+        i.className="fa-solid fa-lock"; l.textContent="Login"; document.getElementById("public-notice-banner").style.display="flex"; }
+}
+</script>
+</body>
+</html>
