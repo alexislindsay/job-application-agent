@@ -1,0 +1,99 @@
+{
+  "cover_letter": "# Cover Letter\n\nDear Hiring Team,\n\nI am writing to express my strong interest in the Project Manager position. With over 15 years of experience spanning operational leadership, technical coordination, and customer success across the transportation, logistics, and tech sectors, I have built a career on delivering complex projects on time and improving system efficiency.\n\nDuring my time at Revature, I served as the Assistant Scrum Master for a major group project, stepping up to coordinate the development of an internal enterprise social media application that bridged social networking and knowledge sharing. In this role, I facilitated daily standups, resolved blockers, and aligned our development team of HTML/JS, Java, and SQL engineers. Additionally, I designed and programmed a web-based expense reimbursement application that successfully reduced processing times by 25%.\n\nMy background also includes extensive operations management at CSX, where I was recognized as the #1 responder, managing over 1,000 technical and mechanical support calls monthly, and successfully led a team of contract technicians to achieve a milestone of 180 days incident-free. I pride myself on my ability to translate complex systems information into actionable insights, clear documentation, and efficient workflows.\n\nI am excited about the opportunity to bring my technical background and project management expertise to your team. Thank you for your time and consideration.\n\nSincerely,\n\nAlexis Lindsay",
+  "tailored_cv": {
+    "name": "Alexis Lindsay",
+    "contact": {
+      "email": "ALEXISLINDSAY@YAHOO.COM",
+      "phone": "+39 352 0736 005",
+      "location": "Rome, Italy",
+      "linkedin": "Alexis Lindsay",
+      "website": "www.alexislindsay.com"
+    },
+    "summary": "Result-driven Project Manager and former Software Associate with a proven track record of coordinating technical teams, optimizing workflows, and delivering web applications. Experienced in agile methodologies, data management, and cross-functional leadership across startups and enterprise logistics.",
+    "experience": [
+      {
+        "company": "Lexology Enterprises",
+        "role": "Business Consultant (Remote)",
+        "start_date": "May 2023",
+        "end_date": "Present",
+        "bullets": [
+          "Provide high-level strategic counsel on brand narrative, market positioning, and engagement strategies.",
+          "Lead self-directed research and systems design projects, synthesizing large volumes of complex technical information into clear, actionable internal documentation.",
+          "Advise on audience expansion strategies across diverse digital channels, simplifying complex ideas for external educational content."
+        ]
+      },
+      {
+        "company": "Acadly, Inc.",
+        "role": "Customer Success Manager (San Francisco, CA / Remote)",
+        "start_date": "Nov 2022",
+        "end_date": "May 2023",
+        "bullets": [
+          "Increased user satisfaction by 20% by establishing and nurturing key relationships with administrators and users.",
+          "Enhanced CRM data accuracy by 30% through comprehensive audit, cleanup, and consolidation of HubSpot records, eliminating massive duplication.",
+          "Generated a 15% surge in qualified leads by structuring targeted email outreach lists, executing mail merges, and coordinating demo presentations."
+        ]
+      },
+      {
+        "company": "Revature",
+        "role": "Software Development Associate",
+        "start_date": "Dec 2019",
+        "end_date": "April 2020",
+        "bullets": [
+          "Coordinated full-stack project workflows as Assistant Scrum Master, directing a team of developers to build a conceptual enterprise social media platform combining Stack Overflow and social features.",
+          "Designed, programmed, and debugged a web-based expense reimbursement application, contributing to a 15% increase in overall system performance and reducing processing times by 25%.",
+          "Acquired strong foundations in agile Scrum methodologies, Git version control, object-oriented programming (Java), and database management (SQL)."
+        ]
+      },
+      {
+        "company": "Jacksonville Transportation Authority",
+        "role": "Service Delivery Manager",
+        "start_date": "March 2019",
+        "end_date": "Dec 2019",
+        "bullets": [
+          "Led operations supervisors and operators to deliver daily transit services, achieving an exceptional 99.5% on-time performance rate.",
+          "Planned and directed community engagement initiatives that generated a 10% increase in positive public relations sentiment.",
+          "Navigated complex union relations, conducting disciplinary investigations and hearings in strict compliance with Collective Bargaining Agreements (CBAs)."
+        ]
+      },
+      {
+        "company": "CSX",
+        "role": "Manager of Operations and Data Control",
+        "start_date": "2014",
+        "end_date": "April 2017",
+        "bullets": [
+          "Earned #1 responder status by managing over 1,000 technical locomotive repair support calls per month, facilitating rapid troubleshooting of line-of-road failures.",
+          "Administered and provided user training for 'Seymour,' a customized Maximo-based inventory system, reducing system incident rates by 15% and increasing team productivity by 10%.",
+          "Communicated real-time incident progress reports to senior executive leadership, contributing to a 20% increase in overall network operational efficiency."
+        ]
+      }
+    ],
+    "education": [
+      {
+        "degree": "Master of Arts in Organizational Leadership",
+        "institution": "Claremont Lincoln University, CA",
+        "year": "2024"
+      },
+      {
+        "degree": "Master of Project Management (M.P.M.)",
+        "institution": "Rome Business School, Italy",
+        "year": "2023"
+      },
+      {
+        "degree": "Bachelor of Science in Business Administration",
+        "institution": "Metropolitan State University, St. Paul, MN",
+        "year": "2012"
+      }
+    ],
+    "skills": [
+      "Project Management",
+      "Agile/Scrum",
+      "CRM & HubSpot",
+      "Data Analysis",
+      "Process Optimization",
+      "Git & GitHub",
+      "HTML/JavaScript",
+      "Cross-Functional Leadership",
+      "Technical Documentation"
+    ]
+  }
+}
