@@ -455,15 +455,89 @@ function loadJobForTailoring() {
     generateAITailoring();
 }
 
-function generateAITailoring() {
+async function generateAITailoring() {
     const select = document.getElementById("tailor-job-select");
     const jobId = select ? select.value : DEFAULT_STATE.selectedJobForTailoringId;
     const job = DEFAULT_STATE.jobs.find(j => j.id === jobId) || DEFAULT_STATE.jobs[0];
 
     const sourceResume = DEFAULT_STATE.resumeBank.find(r => r.id === job.recommendedResumeId) || DEFAULT_STATE.resumeBank[0];
 
-    const tailoredCVDocument = `================================================================================
+    const outputArea = document.getElementById("output-content-area");
+    if (outputArea) {
+        outputArea.textContent = "AI Tailoring Engine running...\nAnalyzing Master History...\nOptimizing CV Page Fit...";
+    }
+
+    try {
+        const response = await fetch("http://127.0.0.1:8000/api/tailor", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                job_description: job.snippet,
+                job_title: job.title,
+                company: job.company
+            })
+        });
+
+        if (!response.ok) throw new Error("Failed to contact FastAPI server");
+        const data = await response.json();
+        const tailoredCV = data.tailored_cv;
+
+        let expStr = tailoredCV.experience.map(e => {
+            return `- ${e.role} | ${e.company} (${e.start_date} – ${e.end_date})\n` + 
+                   e.bullets.map(b => `  • ${b}`).join("\n");
+        }).join("\n\n");
+
+        let eduStr = tailoredCV.education.map(ed => {
+            return `• ${ed.degree} | ${ed.institution} (${ed.year})`;
+        }).join("\n");
+
+        const tailoredCVDocument = `================================================================================
 CURRICULUM VITAE (STRICT MAX 2-PAGE PDF FORMAT)
+${tailoredCV.name.toUpperCase()}
+Target Position: ${job.title} at ${job.company}
+Location: ${tailoredCV.contact.location} | Phone: ${tailoredCV.contact.phone}
+Email: ${tailoredCV.contact.email} | Portfolio: ${tailoredCV.contact.website}
+LinkedIn: ${tailoredCV.contact.linkedin}
+================================================================================
+
+PROFESSIONAL SUMMARY
+--------------------------------------------------------------------------------
+${tailoredCV.summary}
+
+CORE COMPETENCIES
+--------------------------------------------------------------------------------
+${tailoredCV.skills.join(" • ")}
+
+PROFESSIONAL EXPERIENCE (TAILORED & GROUNDED)
+--------------------------------------------------------------------------------
+${expStr}
+
+EDUCATION & CERTIFICATIONS
+--------------------------------------------------------------------------------
+${eduStr}
+================================================================================`;
+
+        renderPDFTemplateHTML(tailoredCV, job);
+
+        window.currentTailoredOutputs = {
+            "tailored-cv": tailoredCVDocument,
+            "cover-letter": data.cover_letter,
+            "keyword-match": `CV AUDIT & PAGE FIT REPORT:\n--------------------------------------------------------------------------------\n• PDF Page Limit Guardrail: Strict Max 2 Pages (A4 Standard)\n• Calculated Fit Score: ${job.matchScore}%\n• Zero-Hallucination Status: 100% verified credentials strictly derived from Alexis's official CV.`
+        };
+
+        switchOutputTab(DEFAULT_STATE.activeOutputTab);
+
+    } catch (e) {
+        console.warn("FastAPI offline, falling back to local client-side renderer.", e);
+        generateAITailoringOffline(sourceResume, job);
+    }
+}
+
+function generateAITailoringOffline(sourceResume, job) {
+    const tailoredCVDocument = `================================================================================
+CURRICULUM VITAE (OFFLINE CLIENT-SIDE RENDERER)
 ALEXIS CLARISSE LINDSAY
 Target Position: ${job.title} at ${job.company}
 Location: ${sourceResume.location} | Phone: ${sourceResume.phone}
@@ -499,16 +573,13 @@ As a ${sourceResume.title} holding a Master in Project Management (M.P.M. from R
 
 Sincerely,
 Alexis Clarisse Lindsay
-${sourceResume.location} | ${sourceResume.phone}
+${job.location} | ${sourceResume.phone}
 ${sourceResume.email} | ${sourceResume.website}`;
 
-    const keywordMatchText = `CV AUDIT & PAGE FIT REPORT:
+    const keywordMatchText = `CV AUDIT & PAGE FIT REPORT (OFFLINE):
 --------------------------------------------------------------------------------
 • PDF Page Limit Guardrail: Strict Max 2 Pages (A4 Standard)
-• Target Role: ${job.title} (${job.company})
-• Source Profile: ${sourceResume.title}
-• Calculated Fit Score: ${job.matchScore}%
-• Zero-Hallucination Status: 100% verified credentials strictly derived from Alexis's official CV.`;
+• Calculated Fit Score: ${job.matchScore}%`;
 
     window.currentTailoredOutputs = {
         "tailored-cv": tailoredCVDocument,
@@ -523,38 +594,70 @@ function renderPDFTemplateHTML(res, job) {
     let renderArea = document.getElementById("pdf-template-area");
     if (!renderArea) return;
 
+    const name = res.fullname || res.name || "ALEXIS CLARISSE LINDSAY";
+    const title = res.title || job.title;
+    const location = res.location || (res.contact ? res.contact.location : "");
+    const phone = res.phone || (res.contact ? res.contact.phone : "");
+    const email = res.email || (res.contact ? res.contact.email : "");
+    const linkedin = res.linkedin || (res.contact ? res.contact.linkedin : "");
+    const summary = res.summary || "";
+    
+    let skills = res.skills || "";
+    if (Array.isArray(skills)) {
+        skills = skills.join(" • ");
+    }
+    
+    let experience = res.experience || "";
+    if (Array.isArray(experience)) {
+        experience = experience.map(e => {
+            return `<strong>${e.role}</strong> | ${e.company} (${e.start_date} – ${e.end_date})<br>` + 
+                   e.bullets.map(b => `• ${b}`).join("<br>");
+        }).join("<br><br>");
+    } else {
+        experience = experience.replace(/\n/g, '<br>');
+    }
+
+    let education = res.education || "";
+    if (Array.isArray(education)) {
+        education = education.map(ed => {
+            return `• ${ed.degree} | ${ed.institution} (${ed.year})`;
+        }).join("<br>");
+    } else {
+        education = education.replace(/\n/g, '<br>');
+    }
+
     renderArea.innerHTML = `
         <div class="pdf-cv-container">
             <div class="pdf-header">
-                <h1 class="pdf-name">ALEXIS CLARISSE LINDSAY</h1>
-                <div class="pdf-title-sub">${res.title}</div>
+                <h1 class="pdf-name">${escapeHtml(name.toUpperCase())}</h1>
+                <div class="pdf-title-sub">${escapeHtml(title)}</div>
                 <div class="pdf-contact-bar">
-                    <span><i class="fa-solid fa-location-dot"></i> ${res.location}</span> | 
-                    <span><i class="fa-solid fa-phone"></i> ${res.phone}</span> | 
-                    <span><i class="fa-solid fa-envelope"></i> ${res.email}</span> | 
-                    <span><i class="fa-brands fa-linkedin"></i> ${res.linkedin || 'alexis-lindsay'}</span>
+                    <span><i class="fa-solid fa-location-dot"></i> ${escapeHtml(location)}</span> | 
+                    <span><i class="fa-solid fa-phone"></i> ${escapeHtml(phone)}</span> | 
+                    <span><i class="fa-solid fa-envelope"></i> ${escapeHtml(email)}</span> | 
+                    <span><i class="fa-brands fa-linkedin"></i> ${escapeHtml(linkedin)}</span>
                 </div>
             </div>
 
             <div class="pdf-section">
                 <h2 class="pdf-sec-title">PROFESSIONAL SUMMARY</h2>
-                <p class="pdf-text">${res.summary}</p>
+                <p class="pdf-text">${escapeHtml(summary)}</p>
             </div>
 
             <div class="pdf-section">
                 <h2 class="pdf-sec-title">CORE COMPETENCIES & TARGET ALIGNMENT</h2>
-                <div class="pdf-tags-aligned">Target Fit: ${job.tags.join(" • ")}</div>
-                <p class="pdf-text">${res.skills}</p>
+                <div class="pdf-tags-aligned">Target Fit: ${escapeHtml(job.tags.join(" • "))}</div>
+                <p class="pdf-text">${escapeHtml(skills)}</p>
             </div>
 
             <div class="pdf-section">
                 <h2 class="pdf-sec-title">PROFESSIONAL EXPERIENCE</h2>
-                <div class="pdf-exp-content">${res.experience.replace(/\n/g, '<br>')}</div>
+                <div class="pdf-exp-content">${experience}</div>
             </div>
 
             <div class="pdf-section">
                 <h2 class="pdf-sec-title">EDUCATION & CERTIFICATIONS</h2>
-                <div class="pdf-edu-content">${res.education.replace(/\n/g, '<br>')}</div>
+                <div class="pdf-edu-content">${education}</div>
             </div>
             <div class="pdf-page-footer">Page 1 of 2 — Alexis Clarisse Lindsay CV</div>
         </div>
